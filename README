@@ -1,0 +1,24 @@
+This repository demonstrates an issue with the Gradle wrapper script.
+The gradle wrapper task is executed twice to ensure that the wrapper
+script itself is updated; the first pass only updates the properties
+file.
+
+$ ./gradlew wrapper --gradle-version 3.1
+$ ./gradlew wrapper --gradle-version 3.1
+$ ./gradlew '-DGERRIT_EVENT_ACCOUNT="\"John Smith\" <jsmith@example.com>"' hello
+:hello
+Hello world
+
+BUILD SUCCESSFUL
+
+Total time: 0.685 secs
+
+$ ./gradlew wrapper --gradle-version 3.2
+$ ./gradlew wrapper --gradle-version 3.2
+$ ./gradlew '-DGERRIT_EVENT_ACCOUNT="\"John Smith\" <jsmith@example.com>"' hello
+./gradlew: line 164: jsmith@example.com: No such file or directory
+
+The Gradle 3.2 version of the wrapper shell script fails to handle
+arguments escaped this way. The choice of example argument is
+deliberate - this is a real world example of escaping produced by
+Jenkins with the Gerrit and Gradle integrations.
